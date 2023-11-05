@@ -1,40 +1,15 @@
-import io.github.bonigarcia.wdm.WebDriverManager;
-import net.bytebuddy.pool.TypePool;
+package Tests;
+
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.List;
 
-public class ContactUsTest {
-    private WebDriver driver;
-
-    @BeforeAll
-    public static void setupClass() {
-        WebDriverManager.chromedriver().setup();
-    }
-
-    @BeforeEach
-    public void setupTest() {
-        driver = new ChromeDriver();
-    }
-
-    @AfterEach
-    void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
+public class ContactUsTest extends BaseTest {
 
     @Test
     public void shouldNotAllowToSendEmptyContactForm() {
@@ -44,9 +19,6 @@ public class ContactUsTest {
 //            będzie czekać maksymalnie 10 sekund. Jeśli element będzie gotowy wcześniej to kod pójdzie dalej.
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-        driver.get("http://www.automationpractice.pl/index.php");
-        Assertions.assertThat(driver.getTitle()).isEqualTo("My Shop");
 
         WebElement contactUsLink = driver.findElement(By.linkText("Contact us"));
         contactUsLink.click();
@@ -70,8 +42,6 @@ public class ContactUsTest {
 
     @Test
     public void shouldNotAllowToSendContactFormWithOnlyEmail() {
-        driver.get("http://www.automationpractice.pl/index.php");
-        Assertions.assertThat(driver.getTitle()).isEqualTo("My Shop");
 
         WebElement contactUsLink = driver.findElement(By.linkText("Contact us"));
         contactUsLink.click();

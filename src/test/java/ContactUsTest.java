@@ -66,6 +66,31 @@ public class ContactUsTest {
 
 //        Asercja sprawdza czy element alertBox jest wyświetlany. Sprawdzamy czy to jest prawda
         Assertions.assertThat(alertBox.isDisplayed()).isTrue();
+    }
+
+    @Test
+    public void shouldNotAllowToSendContactFormWithOnlyEmail() {
+        driver.get("http://www.automationpractice.pl/index.php");
+        Assertions.assertThat(driver.getTitle()).isEqualTo("My Shop");
+
+        WebElement contactUsLink = driver.findElement(By.linkText("Contact us"));
+        contactUsLink.click();
+
+//        Metoda sendKeys wpisuje coś w dane pole
+        WebElement emailInput = driver.findElement(By.id("email"));
+        emailInput.sendKeys("test@test.com");
+
+        WebElement sendButton = driver.findElement(By.id("submitMessage"));
+        sendButton.click();
+
+        WebElement alertBox = driver.findElement(By.className("alert-danger"));
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.visibilityOf(alertBox));
+
+        Assertions.assertThat(alertBox.isDisplayed()).isTrue();
 
     }
 }
+
+

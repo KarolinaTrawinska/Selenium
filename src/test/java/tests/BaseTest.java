@@ -1,4 +1,4 @@
-package Tests;
+package tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.assertj.core.api.Assertions;
@@ -10,7 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class BaseTest {
     protected WebDriver driver;
-    private static final String BASE_URL = "http://www.automationpractice.pl/index.php";
+    protected static final String BASE_URL = "http://www.automationpractice.pl/index.php";
 
 
     @BeforeAll
@@ -19,7 +19,7 @@ public class BaseTest {
     }
 
     @BeforeEach
-    public void setupTest() {
+    protected void setupTest() {
         driver = new ChromeDriver();
         driver.get(BASE_URL);
         Assertions.assertThat(driver.getTitle()).isEqualTo("My Shop");

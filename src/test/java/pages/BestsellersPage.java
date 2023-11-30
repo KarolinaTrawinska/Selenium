@@ -16,7 +16,7 @@ public class BestsellersPage {
     }
 
 //    Findby - jest to adnotacja do divera findElements, używa się tych samych css. W każdym teście jak będziemy
-//    chcieli skorzystać z productNames to używas się własnie tego.
+//    chcieli skorzystać z productNames to używa się własnie tego.
     @FindBy(css = "#blockbestsellers .product-name")
     List<WebElement> productNames;
 

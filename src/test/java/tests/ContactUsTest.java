@@ -1,64 +1,51 @@
 package tests;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.chrome.ChromeDriver;
+import pages.ContactUsFormPage;
+import pages.TopMenuPage;
 
-import java.time.Duration;
+import static org.assertj.core.api.Assertions.*;
 
 public class ContactUsTest extends BaseTest {
+
+    private TopMenuPage topMenuPage;
+    private ContactUsFormPage contactUsFormPage;
+
+
+    @BeforeEach
+    public void setupTest() {
+        driver = new ChromeDriver();
+        driver.get(BASE_URL);
+        Assertions.assertThat(driver.getTitle()).isEqualTo("My Shop");
+
+        topMenuPage = new TopMenuPage(driver);
+        contactUsFormPage = new ContactUsFormPage(driver);
+    }
 
     @Test
     public void shouldNotAllowToSendEmptyContactForm() {
 
-//      Czekanie na elementy1
-//            ImplicitlyWait - dodaje się do drivera, globalnie dla wszystkich elementów (findElement). Za każdym razem
-//            będzie czekać maksymalnie 10 sekund. Jeśli element będzie gotowy wcześniej to kod pójdzie dalej.
+        topMenuPage.clickOnContactUsLink();
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        contactUsFormPage.clickSendButton();
 
-        WebElement contactUsLink = driver.findElement(By.linkText("Contact us"));
-        contactUsLink.click();
-
-        WebElement sendButton = driver.findElement(By.id("submitMessage"));
-        sendButton.click();
-
-//        Czekanie na elementy2
-//          ExplicitWait - mówimy na jaki konkretnie element chcemy poczekać np. taki który się wolniej ładuje na stronie.
-//          tworzymy nowy obiekt WebDriverWait. Podaje się warunek na ktory chce się czekać - widoczność elementu alertBox
-
-        WebElement alertBox = driver.findElement(By.className("alert-danger"));
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.visibilityOf(alertBox));
-
-
-//        Asercja sprawdza czy element alertBox jest wyświetlany. Sprawdzamy czy to jest prawda
-        Assertions.assertThat(alertBox.isDisplayed()).isTrue();
+        assertThat(contactUsFormPage.isAlertBoxDisplayed()).isTrue();
     }
+
 
     @Test
     public void shouldNotAllowToSendContactFormWithOnlyEmail() {
 
-        WebElement contactUsLink = driver.findElement(By.linkText("Contact us"));
-        contactUsLink.click();
+        topMenuPage.clickOnContactUsLink();
 
-//        Metoda sendKeys wpisuje coś w dane pole
-        WebElement emailInput = driver.findElement(By.id("email"));
-        emailInput.sendKeys("test@test.com");
+        contactUsFormPage.enterEmail("test@gmail.com");
 
-        WebElement sendButton = driver.findElement(By.id("submitMessage"));
-        sendButton.click();
+        contactUsFormPage.clickSendButton();
 
-        WebElement alertBox = driver.findElement(By.className("alert-danger"));
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.visibilityOf(alertBox));
-
-        Assertions.assertThat(alertBox.isDisplayed()).isTrue();
+        assertThat(contactUsFormPage.isAlertBoxDisplayed()).isTrue();
 
     }
 }

@@ -1,22 +1,17 @@
 package pages;
 
+import model.Message;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.Select;
 
-import java.time.Duration;
-
-public class ContactUsFormPage {
-
-    private WebDriverWait wait;
+public class ContactUsFormPage extends BasePage {
 
     public ContactUsFormPage(WebDriver driver) {
-        PageFactory.initElements(driver, this);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        super(driver);
     }
 
     @FindBy(id = "submitMessage")
@@ -27,6 +22,18 @@ public class ContactUsFormPage {
 
     @FindBy(id = "email")
     WebElement emailInput;
+
+    @FindBy(id = "id_contact")
+    WebElement subjectSelect;
+
+    @FindBy(id = "id_order")
+    WebElement orderReferenceInput;
+
+    @FindBy(id = "message")
+    WebElement messageArea;
+
+    @FindBy(className = "alert-success")
+    WebElement greenAlertBox;
 
     public void clickSendButton() {
         sendButton.click();
@@ -44,5 +51,25 @@ public class ContactUsFormPage {
 
     public void enterEmail(String email) {
         emailInput.sendKeys(email);
+    }
+
+    public void sendContactUsForm(Message message) {
+        Select subject = new Select(subjectSelect);
+        subject.selectByVisibleText(message.getSubject().getValue());
+        emailInput.sendKeys(message.getEmail());
+        orderReferenceInput.sendKeys(message.getOrderReference());
+        messageArea.sendKeys(message.getMessage());
+
+        sendButton.click();
+
+    }
+    public boolean isGreenAlertBoxDisplayed() {
+        wait.until(ExpectedConditions.visibilityOf(greenAlertBox));
+        boolean isDisplayed = false;
+        try {
+            isDisplayed = greenAlertBox.isDisplayed();
+        } catch (NoSuchElementException e) {
+        }
+        return isDisplayed;
     }
 }

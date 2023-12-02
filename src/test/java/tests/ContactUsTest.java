@@ -1,5 +1,7 @@
 package tests;
 
+import enums.MessageSubject;
+import model.Message;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +49,21 @@ public class ContactUsTest extends BaseTest {
 
         assertThat(contactUsFormPage.isAlertBoxDisplayed()).isTrue();
 
+    }
+
+    @Test
+    public void shouldSendContactUsFormWithValidData() {
+        topMenuPage.clickOnContactUsLink();
+
+        Message message = new Message();
+        message.setSubject(MessageSubject.WEBMASTER);
+        message.setEmail("test@test.com");
+        message.setOrderReference("1a2b");
+        message.setMessage("Wiadomość");
+
+        contactUsFormPage.sendContactUsForm(message);
+
+        assertThat(contactUsFormPage.isGreenAlertBoxDisplayed()).isTrue();
     }
 }
 
